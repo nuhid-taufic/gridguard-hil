@@ -1,0 +1,47 @@
+project:
+  name: "GridGuard-HIL"
+  version: "0.1.0"
+  random_seed: 42
+
+grid_code:
+  nominal_frequency_hz: 50.0
+  freq_min_hz: 48.5            # Under-frequency relay trip limit
+  freq_max_hz: 51.5            # Over-frequency relay trip limit
+  rocof_max_hz_per_s: 0.5      # Max allowed |df/dt| over 500ms window
+  rocof_window_s: 0.5
+  settling_band_hz: 0.1        # Must return within +/- 0.1 Hz
+  max_settling_time_s: 15.0
+  min_phase_margin_deg: 30.0   # Control theory robustness floor
+  min_gain_margin_db: 6.0
+
+bess_vsm:
+  p_max_pu: 0.50               # Inverter IGBT/MOSFET saturation limit
+  h_virtual_min_s: 0.5         # Virtual inertia range (seconds)
+  h_virtual_max_s: 10.0
+  d_virtual_min: 0.1           # Virtual damping range
+  d_virtual_max: 5.0
+  soc_min_pct: 20.0            # Protect battery health
+  soc_max_pct: 90.0
+
+hil_realtime:
+  ac_cycle_budget_ms: 20.0     # 1 full cycle of 50 Hz AC grid
+  uart_baudrate: 115200
+
+dataset_uci:
+  raw_path: "data/uci_raw/Data_for_UCI_named.csv"
+  test_size: 0.20
+  raw_input_features:
+    - "tau1"
+    - "tau2"
+    - "tau3"
+    - "tau4"
+    - "p2"
+    - "p3"
+    - "p4"
+    - "g1"
+    - "g2"
+    - "g3"
+    - "g4"
+  derived_physics_column: "p1" # Computed as -(p2 + p3 + p4) inside Pipeline
+  regression_target: "stab"    # NEVER use as input feature (Data Leakage!)
+  classification_target: "stabf"

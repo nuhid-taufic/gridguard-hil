@@ -1,0 +1,13 @@
+# Virtual environments & caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+
+# Data & trained binary artifacts
+data/uci_raw/*.csv
+data/vsm_simulated/*.csv
+models/*.joblib
+models/*.pkl
